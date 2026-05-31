@@ -148,8 +148,9 @@ color:#ffb6c1;
 let heart=0;
 
 function next(n){
-document.getElementById("s"+n).classList.remove("active");
-document.getElementById("s"+(n+1)).classList.add("active");
+function next(n){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("s"+(n+1)).classList.add("active");
 }
 
 function blast(){
