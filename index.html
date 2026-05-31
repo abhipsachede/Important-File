@@ -13,7 +13,7 @@
 body {
 margin:0;
 font-family:Poppins;
-background: radial-gradient(circle at top, #0b0f2a, #000);
+background: radial-gradient(circle at top, #050816, #000);
 color:white;
 overflow:hidden;
 text-align:center;
@@ -25,19 +25,27 @@ height:100vh;
 align-items:center;
 justify-content:center;
 flex-direction:column;
+padding:20px;
 }
 
 .active {display:flex;}
 
 h1 {
-font-size:2.5rem;
+font-size:2.3rem;
+animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+0%{transform:translateY(0px);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0px);}
 }
 
 .btn {
 padding:12px 25px;
 border:none;
 border-radius:30px;
-background:#ff4d6d;
+background:linear-gradient(45deg,#ff4d6d,#ff9a9e);
 color:white;
 font-size:16px;
 margin-top:20px;
@@ -45,45 +53,88 @@ cursor:pointer;
 }
 
 .heart {
-font-size:30px;
+font-size:35px;
 margin:10px;
 cursor:pointer;
-opacity:0.3;
+opacity:0.2;
+transition:0.3s;
 }
 
 .heart.active {
 opacity:1;
-transform:scale(1.3);
+transform:scale(1.4);
+filter:drop-shadow(0 0 10px pink);
+}
+
+/* candle */
+.candle {
+width:20px;
+height:60px;
+background:orange;
+margin:20px auto;
+border-radius:8px;
+position:relative;
+}
+
+.flame {
+width:20px;
+height:25px;
+background:gold;
+border-radius:50%;
+position:absolute;
+top:-20px;
+left:0;
+animation:flicker 0.2s infinite;
+}
+
+@keyframes flicker {
+0%{transform:scale(1);}
+50%{transform:scale(1.2);}
+100%{transform:scale(0.9);}
+}
+
+.sparkle {
+position:absolute;
+width:4px;
+height:4px;
+background:white;
+border-radius:50%;
+animation:move 3s linear infinite;
+}
+
+@keyframes move {
+0%{transform:translateY(0);opacity:1;}
+100%{transform:translateY(-200px);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SCREEN 1 -->
 <div class="screen active" id="s1">
 <h1>Hii Shriyash 🌌</h1>
-<p>A small universe is waiting for you...</p>
+<p>A galaxy is waiting for you...</p>
 <button class="btn" onclick="next(1)">Tap to Enter</button>
 </div>
 
-<!-- SCREEN 2 -->
 <div class="screen" id="s2">
 <h1>3... 2... 1 🎉</h1>
 <button class="btn" onclick="next(2)">Continue</button>
 </div>
 
-<!-- SCREEN 3 -->
 <div class="screen" id="s3">
 <h1>Happiest Birthday 🎂</h1>
-<p>Blow the candles in imagination 😭✨</p>
-<button class="btn" onclick="blast()">Blow Candle</button>
+
+<div class="candle">
+<div class="flame" id="flame"></div>
 </div>
 
-<!-- SCREEN 4 -->
+<button class="btn" onclick="blow()">Blow Candle</button>
+</div>
+
 <div class="screen" id="s4">
 <h1>5 Secrets 💖</h1>
-<p>Tap hearts</p>
+<p>Tap all hearts to unlock</p>
 
 <div>
 <span class="heart" onclick="tap(this)">❤️</span>
@@ -92,37 +143,58 @@ transform:scale(1.3);
 <span class="heart" onclick="tap(this)">❤️</span>
 <span class="heart" onclick="tap(this)">❤️</span>
 </div>
+
+<p id="msg" style="margin-top:20px;"></p>
 </div>
 
-<!-- SCREEN 5 -->
 <div class="screen" id="s5">
 <h1>Final Message 💌</h1>
-<p>You are special in a way words can’t explain 🌌</p>
+<p style="max-width:300px;">
+You are not just a name in my story… you are the whole sky I look at 🌌💙
+</p>
 </div>
 
 <script>
-let current = 1;
-let heartCount = 0;
+let heart=0;
 
 function next(n){
 document.getElementById("s"+n).classList.remove("active");
 document.getElementById("s"+(n+1)).classList.add("active");
 }
 
-function blast(){
-confetti({particleCount:200, spread:100});
+function blow(){
+document.getElementById("flame").style.display="none";
+confetti({particleCount:200,spread:120});
 next(3);
 }
 
 function tap(el){
 if(!el.classList.contains("active")){
 el.classList.add("active");
-heartCount++;
-if(heartCount===5){
+heart++;
+
+let msg=document.getElementById("msg");
+
+if(heart===1) msg.innerText="Secret 1 unlocked...";
+if(heart===2) msg.innerText="You are closer...";
+if(heart===3) msg.innerText="Something special is building...";
+if(heart===4) msg.innerText="Almost there...";
+if(heart===5){
+msg.innerText="Final secret unlocked 💌";
 setTimeout(()=>next(4),1000);
 }
 }
 }
+
+// sparkles
+setInterval(()=>{
+let s=document.createElement("div");
+s.className="sparkle";
+s.style.left=Math.random()*100+"vw";
+s.style.top="80vh";
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),3000);
+},300);
 </script>
 
 </body>
