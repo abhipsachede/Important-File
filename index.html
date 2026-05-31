@@ -5,83 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Story 🎬</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
-
 <style>
 body{
 margin:0;
-font-family:Poppins;
+font-family:Arial;
 background:black;
 color:white;
 overflow:hidden;
+text-align:center;
 }
 
-/* background glow */
-.bg{
-position:fixed;
-width:100%;
-height:100%;
-background:radial-gradient(circle at top, #1a1f3c, #000);
-z-index:0;
-}
-
-/* container */
 .screen{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
+display:none;
+height:100vh;
 align-items:center;
 justify-content:center;
-text-align:center;
-opacity:0;
-transform:scale(1.05);
-transition:1s;
-z-index:2;
+flex-direction:column;
 padding:20px;
 }
 
-.active{
-opacity:1;
-transform:scale(1);
-}
+.active{display:flex;}
 
-/* netflix title */
-.title{
-font-size:2rem;
-font-weight:900;
-letter-spacing:1px;
-}
-
-.subtitle{
-opacity:0.7;
-margin-top:10px;
-}
-
-/* button */
 .btn{
-margin-top:20px;
-padding:12px 25px;
-border:none;
-border-radius:5px;
+padding:12px 20px;
 background:#e50914;
 color:white;
-font-weight:600;
-cursor:pointer;
+border:none;
+border-radius:6px;
+margin-top:15px;
 }
 
-/* top bar */
-.top{
-position:fixed;
-top:15px;
-left:15px;
-font-weight:700;
-color:#e50914;
-z-index:3;
-}
-
-/* hearts */
 .heart{
 font-size:30px;
 margin:10px;
@@ -94,61 +47,41 @@ opacity:1;
 transform:scale(1.3);
 }
 
-/* progress dots */
-.dots{
-position:fixed;
-bottom:20px;
-width:100%;
-text-align:center;
-z-index:3;
+#msg{
+margin-top:15px;
+color:pink;
 }
 
-.dot{
-display:inline-block;
-width:8px;
-height:8px;
-background:gray;
-border-radius:50%;
-margin:4px;
-}
-
-.dot.active{
-background:#e50914;
+#final{
+max-width:300px;
+line-height:1.6;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-
-<div class="top">NETFLIX STORY</div>
-
 <!-- SCREEN 1 -->
 <div class="screen active" id="s1">
-<div class="title">A Birthday Story 🎬</div>
-<div class="subtitle">Tap to start episode 1</div>
-<button class="btn" onclick="next()">Play</button>
+<h2>Netflix Story 🎬</h2>
+<button class="btn" onclick="go(1)">Play</button>
 </div>
 
 <!-- SCREEN 2 -->
 <div class="screen" id="s2">
-<div class="title">Episode 1</div>
-<div class="subtitle">A small universe is waiting for you 🌌</div>
-<button class="btn" onclick="next()">Next</button>
+<h2>Episode 1 🌌</h2>
+<button class="btn" onclick="go(2)">Next</button>
 </div>
 
 <!-- SCREEN 3 -->
 <div class="screen" id="s3">
-<div class="title">Episode 2</div>
-<div class="subtitle">3... 2... 1 🎂 Birthday moment</div>
-<button class="btn" onclick="next()">Continue</button>
+<h2>Birthday 🎂</h2>
+<button class="btn" onclick="go(3)">Continue</button>
 </div>
 
 <!-- SCREEN 4 -->
 <div class="screen" id="s4">
-<div class="title">Episode 3</div>
-<div class="subtitle">Unlock 5 secrets ❤️</div>
+<h2>5 Secrets ❤️</h2>
 
 <div>
 <span class="heart" onclick="tap(this,1)">❤️</span>
@@ -163,7 +96,7 @@ background:#e50914;
 
 <!-- SCREEN 5 -->
 <div class="screen" id="s5">
-<div class="title">Final Episode 💌</div>
+<h2>Final 💌</h2>
 <p id="final"></p>
 </div>
 
@@ -171,18 +104,13 @@ background:#e50914;
 
 let h=0;
 
-function show(n){
+/* SCREEN SWITCH (SIMPLE + SAFE) */
+function go(n){
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-document.getElementById("s"+n).classList.add("active");
+document.getElementById("s"+(n+1)).classList.add("active");
 }
 
-function next(){
-let cur=document.querySelector(".screen.active").id;
-let num=parseInt(cur.replace("s",""));
-show(num+1);
-}
-
-/* hearts */
+/* HEARTS */
 function tap(el,n){
 if(!el.classList.contains("active")){
 el.classList.add("active");
@@ -190,37 +118,28 @@ h++;
 
 let msg=document.getElementById("msg");
 
-if(n==1) msg.innerText="Secret unlocked...";
-if(n==2) msg.innerText="Getting deeper...";
-if(n==3) msg.innerText="Something soft...";
-if(n==4) msg.innerText="Almost there...";
+if(n==1) msg.innerText="Secret 1 ✨";
+if(n==2) msg.innerText="Secret 2 💙";
+if(n==3) msg.innerText="Secret 3 🌌";
+if(n==4) msg.innerText="Secret 4 💫";
+
 if(n==5){
 msg.innerText="Final unlocking...";
-setTimeout(()=>final(),1000);
+setTimeout(()=>final(),800);
 }
 }
 }
 
-/* final scene */
+/* FINAL MESSAGE */
 function final(){
-show(5);
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById("s5").classList.add("active");
 
-let text=`Hiiii Shriyash 💙
-This is not just a birthday.
-It is a small story made in a galaxy for you 🌌
-
-I hope you always find peace, growth, and happiness in life.
-Even if words are not spoken daily, some feelings stay constant 🦋`;
-
-let i=0;
-let el=document.getElementById("final");
-el.innerHTML="";
-
-let t=setInterval(()=>{
-el.innerHTML+=text[i]=="\n"?"<br>":text[i];
-i++;
-if(i>=text.length) clearInterval(t);
-},25);
+document.getElementById("final").innerHTML=
+`Hiiii Shriyash 💙<br><br>
+Happy Birthday ✨<br><br>
+You are special in a quiet but deep way 🦋<br><br>
+Stay happy always 🌌`;
 }
 
 </script>
