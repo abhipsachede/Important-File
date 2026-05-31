@@ -19,16 +19,15 @@ overflow:hidden;
 text-align:center;
 }
 
-/* galaxy stars */
 body::before{
 content:"";
 position:fixed;
 width:100%;
 height:100%;
 background:radial-gradient(white 1px,transparent 1px);
-background-size:50px 50px;
+background-size:40px 40px;
+opacity:0.15;
 animation:move 20s linear infinite;
-opacity:0.2;
 }
 
 @keyframes move{
@@ -43,13 +42,9 @@ align-items:center;
 justify-content:center;
 flex-direction:column;
 padding:20px;
-position:relative;
-z-index:2;
 }
 
 .active{display:flex;}
-
-h1{font-size:2rem;}
 
 .btn{
 padding:12px 20px;
@@ -58,7 +53,6 @@ border-radius:25px;
 background:linear-gradient(45deg,#ff4d6d,#ff9a9e);
 color:white;
 margin-top:15px;
-font-size:16px;
 }
 
 .heart{
@@ -73,54 +67,42 @@ opacity:1;
 transform:scale(1.3);
 }
 
-.candle{
-width:20px;
-height:60px;
-background:orange;
-margin:20px auto;
-border-radius:6px;
-position:relative;
+#titli{
+position:fixed;
+bottom:20px;
+left:20px;
+font-size:26px;
+animation:fly 3s infinite;
 }
 
-.flame{
-width:20px;
-height:20px;
-background:gold;
-border-radius:50%;
-position:absolute;
-top:-15px;
-left:0;
-animation:flicker 0.2s infinite;
-}
-
-@keyframes flicker{
-0%{transform:scale(1);}
-50%{transform:scale(1.2);}
-100%{transform:scale(0.9);}
+@keyframes fly{
+0%{transform:translateY(0);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0);}
 }
 </style>
 </head>
 
 <body>
 
+<div id="titli">🦋 Titli</div>
+
 <!-- SCREEN 1 -->
 <div class="screen active" id="s1">
 <h1>Hii Shriyash 🌌</h1>
-<p>A small surprise is waiting...</p>
-<button class="btn" onclick="go(1)">Tap to Enter</button>
+<button class="btn" onclick="next(1)">Tap to Enter</button>
 </div>
 
 <!-- SCREEN 2 -->
 <div class="screen" id="s2">
-<h1>3... 2... 1 🎉</h1>
-<button class="btn" onclick="go(2)">Continue</button>
+<h1>3...2...1 🎉</h1>
+<button class="btn" onclick="next(2)">Continue</button>
 </div>
 
 <!-- SCREEN 3 -->
 <div class="screen" id="s3">
 <h1>Happy Birthday 🎂</h1>
-<div class="candle"><div class="flame" id="flame"></div></div>
-<button class="btn" onclick="blow()">Blow Candle</button>
+<button class="btn" onclick="blast()">Blow Candle</button>
 </div>
 
 <!-- SCREEN 4 -->
@@ -128,11 +110,11 @@ animation:flicker 0.2s infinite;
 <h1>5 Secrets ❤️</h1>
 
 <div>
-<span class="heart" onclick="tap(this)">❤️</span>
-<span class="heart" onclick="tap(this)">❤️</span>
-<span class="heart" onclick="tap(this)">❤️</span>
-<span class="heart" onclick="tap(this)">❤️</span>
-<span class="heart" onclick="tap(this)">❤️</span>
+<span class="heart" onclick="tap(this,1)">❤️</span>
+<span class="heart" onclick="tap(this,2)">❤️</span>
+<span class="heart" onclick="tap(this,3)">❤️</span>
+<span class="heart" onclick="tap(this,4)">❤️</span>
+<span class="heart" onclick="tap(this,5)">❤️</span>
 </div>
 
 <p id="msg"></p>
@@ -141,44 +123,57 @@ animation:flicker 0.2s infinite;
 <!-- SCREEN 5 -->
 <div class="screen" id="s5">
 <h1>Final Message 💌</h1>
-<p>You are special in a way words can’t explain 🌌💙</p>
+
+<p id="finalText"></p>
 </div>
 
 <script>
-let step=1;
+
 let hearts=0;
 
+/* SCREEN SWITCH */
 function show(n){
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
 document.getElementById("s"+n).classList.add("active");
 }
 
-function go(n){
-show(n+1);
-}
+function next(n){ show(n+1); }
 
-function blow(){
-document.getElementById("flame").style.display="none";
+function blast(){
 confetti({particleCount:200,spread:120});
 show(4);
 }
 
-function tap(el){
+/* HEARTS */
+function tap(el,n){
 if(!el.classList.contains("active")){
 el.classList.add("active");
 hearts++;
 
 let msg=document.getElementById("msg");
 
-if(hearts==1) msg.innerText="Secret 1 unlocked ❤️";
-if(hearts==2) msg.innerText="Secret 2 unlocked ❤️";
-if(hearts==3) msg.innerText="Secret 3 unlocked ❤️";
-if(hearts==4) msg.innerText="Secret 4 unlocked ❤️";
-if(hearts==5){
-msg.innerText="Final secret unlocked 💌";
-setTimeout(()=>show(5),1000);
+if(n==1) msg.innerText="Secret 1 ✨";
+if(n==2) msg.innerText="Secret 2 💙";
+if(n==3) msg.innerText="Secret 3 🌌";
+if(n==4) msg.innerText="Secret 4 💫";
+
+if(n==5){
+msg.innerText="Final unlocked 💌";
+setTimeout(()=>showFinal(),1000);
 }
 }
+}
+
+/* FINAL PARA GUARANTEE */
+function showFinal(){
+document.getElementById("finalText").innerHTML =
+`Hiiii Shriyashhhhhhh !!!!! <br><br>
+Happpiestttt Birthdayyyyyyy to youu !!!!<br><br>
+Hehe I Hope You Achieve Everything You Dream Of And Stay Happy Always 🌌💙<br><br>
+Even If I Don’t Say It Loud, You Still Matter In A Very Special Way ✨<br><br>
+— A small galaxy made just for you 🦋`;
+
+show(5);
 }
 </script>
 
